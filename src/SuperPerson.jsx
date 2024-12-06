@@ -9,8 +9,9 @@ function SuperPerson({ name, superpower }) {
   };
 
   return (
-    <li onClick={handleClick}>
-      {name}: {superpower}
+    <li onClick={handleClick} className="flex justify-between items-center p-4 border border-gray-200 rounded hover:shadow-md">
+      <span className="font-semibold">{name}</span>
+      <span className="italic text-gray-500">{superpower}</span>
     </li>
   );
 }
