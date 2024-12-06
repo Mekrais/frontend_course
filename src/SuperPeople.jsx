@@ -1,6 +1,9 @@
 import SuperPerson from "./SuperPerson"
+import { useSelector } from "react-redux";
 
-function SuperPeople({ peeps }) {
+function SuperPeople() {
+  const peeps = useSelector((state) => state.people);
+
   return (
     <ul>
       {peeps.map((peep, i) => {

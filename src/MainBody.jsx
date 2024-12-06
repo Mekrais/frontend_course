@@ -1,23 +1,13 @@
-import { useState } from "react"
+import { useSelector } from "react-redux"
 import SuperPeople from "./SuperPeople"
 import PersonInput from "./PersonInput"
 
 function MainBody() {
-  let peeps = [
-    { name: "Batman", superpower: "Rich" },
-    { name: "Superman", superpower: "Flying" },
-    { name: "Wonder Woman", superpower: "Lasso of Truth" },
-  ]
-
-  const savePerson = (p) => {
-      setData([...data, p])
-  };
-
-  const [data, setData] = useState(peeps)
+  const data = useSelector((state) => state.people)
 
   return (
     <>
-      <PersonInput savePerson={savePerson} />
+      <PersonInput />
       <SuperPeople peeps={data} />
     </>
   )

@@ -1,14 +1,18 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addPerson } from "./features/personslice";
 
-function PersonInput({ savePerson }) {
+function PersonInput() {
   const [name, setName] = useState("");
   const [power, setPower] = useState("");
 
+  const dispatch = useDispatch();
+
   const handleSave = () => {
-    const p = { name, superpower: power };
+    const person = { name, superpower: power };
+    dispatch(addPerson(person));
     setName("");
     setPower("");
-    savePerson(p);
   }
 
   return (
