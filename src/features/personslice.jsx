@@ -1,24 +1,46 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const initialState = [
-  { name: "Batman", superpower: "Rich" },
-  { name: "Superman", superpower: "Flying" },
-  { name: "Wonder Woman", superpower: "Lasso of Truth" },
-];
+export const fetchPeople = createAsyncThunk(
+  "people/fetchPeople",
+  async () => {
+    const response = await fetch(
+      "https://superpeople-api.netlify.app/.netlify/functions/get-superpeople"
+    );
+    const data = await response.json();
+    return data; // This will be the resolved data
+  }
+);
 
 const personSlice = createSlice({
   name: "people",
-  initialState,
+  initialState: {
+    data: [], // Default initial state
+    status: "idle", // idle | loading | succeeded | failed
+    error: null,
+  },
   reducers: {
     addPerson: (state, action) => {
-      state.push(action.payload); // Add a new person
+      state.data.push(action.payload); // Add a new person
     },
     removePerson: (state, action) => {
-      return state.filter((person) => person.name !== action.payload); // Remove a person
+      state.data = state.data.filter((person) => person.name !== action.payload); // Remove a person
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchPeople.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchPeople.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload; // Populate the state with fetched data
+      })
+      .addCase(fetchPeople.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   },
 });
 
-export const { addPerson } = personSlice.actions;
-export const { removePerson } = personSlice.actions;
+export const { addPerson, removePerson } = personSlice.actions;
 export default personSlice.reducer;
